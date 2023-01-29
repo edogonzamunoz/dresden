@@ -4,6 +4,7 @@ odoo.define('pos_inherit.PaymentScreen', function (require) {
     const PaymentScreen = require('point_of_sale.PaymentScreen');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+    const { isConnectionError } = require('point_of_sale.utils');
 
     const PosPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen  {

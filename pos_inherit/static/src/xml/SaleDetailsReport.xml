@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceiptInherit" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='pos-receipt']/div[@class='pos-receipt-contact']" position="after">
+            <br/>
+            <span>Nº FACTURA:</span>
+<!--            <span t-esc="receipt.move.name"/>-->
+<!--            <span t-esc="receipt.company.vat"/>-->
+<!--            <span t-esc="receipt.company.l10n_cl_sii_regional_office"/>-->
+<!--            <t t-if="receipt.account_move">-->
+<!--                <div name="right-upper-side" class="col-4">-->
+<!--                    <div class="row">-->
+<!--                        <div name="right-upper-side" class="col-12">-->
+<!--                            <div class="row border border-dark">-->
+<!--                                <div class="col-12 text-center">-->
+<!--                                    <h6 t-att-style="'color: %s;' % pos.company_id.primary_color">-->
+<!--                                        <strong t-att-style="'color: %s;' % pos.company_id.primary_color">-->
+<!--                                            <br/>-->
+<!--                                            <span style="line-height: 180%;">RUT:</span>-->
+<!--                                            <t t-if="pos.company_id.partner_id.vat">-->
+<!--                                                <span t-esc="pos.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>-->
+<!--                                            </t>-->
+<!--                                            <br/>-->
+<!--                                            <span class="text-uppercase" t-esc="pos.account_move.l10n_latam_document_type_id.name"/>-->
+<!--                                            <br/>-->
+<!--                                            <span>Nº:</span>-->
+<!--                                            <span style="line-height: 200%;"-->
+<!--                                                  t-esc="pos.account_move.l10n_latam_document_number"/>-->
+<!--                                        </strong>-->
+<!--                                    </h6>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row text-center">-->
+<!--                                <div class="col-12 text-center" t-att-style="'color: %s;' % pos.company_id.primary_color"-->
+<!--                                     name="regional-office"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </t>-->
+        </xpath>
+<!--        <xpath expr="//div[@t-if='receipt.pos_qr_code']" position="replace">-->
+<!--            <t t-if="receipt.account_move.l10n_cl_sii_barcode">-->
+<!--                <t t-set="barcode_stamp" t-value="receipt._pdf417_barcode(receipt.account_move.l10n_cl_sii_barcode)"/>-->
+<!--                <t t-if="barcode_stamp">-->
+<!--                    <img class="img-fluid" t-attf-src="data:image/*;base64,{{barcode_stamp}}"/>-->
+<!--                    <p t-att-style="'color: %s;' % receipt.company_id.primary_color" class="text-center small">-->
+<!--                        Timbre Electrónico SII<br/>-->
+<!--                        Resolución Nº:-->
+<!--                        <span t-field="receipt.company_id.l10n_cl_dte_resolution_number"/>-->
+<!--                        de Fecha:-->
+<!--                        <span t-field="receipt.company_id.l10n_cl_dte_resolution_date" t-options='{"widget": "date"}'/>-->
+<!--                        <span name="verification_url">Verifique documento en www.sii.cl</span>-->
+<!--                    </p>-->
+<!--                </t>-->
+<!--            </t>-->
+<!--        </xpath>-->
+    </t>
+</templates>
