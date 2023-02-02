@@ -2,8 +2,8 @@
 <odoo>
     <data noupdate="1">
         <record id="account_journal_boleta" model="account.journal">
-            <field name="name">Boleta</field>
-            <field name="code">BOL</field>
+            <field name="name">Boleta Electrónica</field>
+            <field name="code">BEL</field>
             <field name="type">sale</field>
             <!-- avoid being selected as default journal -->
             <field name="sequence">99</field>

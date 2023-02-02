@@ -49,3 +49,15 @@ class PosOrder(models.Model):
             vals['l10n_latam_document_type_id'] = self.env['l10n_latam.document.type'].search(
                 [('name', '=', 'Boleta Electrónica')]).id
         return vals
+
+    # @api.model
+    # def get_invoice(self, id):
+    #     pos_id = self.search([('pos_reference', '=', id)])
+    #     base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+    #     invoice_id = self.env['account.move'].search(
+    #         [('ref', '=', pos_id.name)])
+    #     return {
+    #         'invoice_name': invoice_id.name,
+    #         'document_name': invoice_id.l10n_latam_document_type_id.name,
+    #         'barcode': invoice_id.l10n_cl_sii_barcode,
+    #     }
