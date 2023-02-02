@@ -4,6 +4,7 @@ odoo.define('pos_inherit.PaymentScreen', function (require) {
     const PaymentScreen = require('point_of_sale.PaymentScreen');
     const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+    const { isConnectionError } = require('point_of_sale.utils');
 
     const PosPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen  {
@@ -30,7 +31,7 @@ odoo.define('pos_inherit.PaymentScreen', function (require) {
                 // 2. Invoice.
                 if (this.currentOrder.is_to_invoice() || this.currentOrder.is_to_boleta()) {
                     if (syncOrderResult.length) {
-                        await this.env.legacyActionManager.do_action('account.account_invoices', {
+                        await this.env.legacyActionManager.do_action('pos_inherit.account_invoices_ticket', {
                             additional_context: {
                                 active_ids: [syncOrderResult[0].account_move],
                             },
