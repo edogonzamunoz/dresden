@@ -113,6 +113,10 @@
                                     <div>
                                         <t t-esc="o.journal_id.name"/>
                                     </div>
+                                    <br/>
+                                    <div>
+                                        <t t-esc="o.journal_id.name"/>
+                                    </div>
                                 </div>
                             </div>
                             <br/>
