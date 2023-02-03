@@ -115,7 +115,7 @@
                                     </div>
                                     <br/>
                                     <div>
-                                        <t t-esc="o.invoice_date"/>
+                                        Fecha de Emisión: <t t-esc="o.invoice_date"/>
                                     </div>
                                 </div>
                             </div>
