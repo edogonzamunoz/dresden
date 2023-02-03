@@ -113,6 +113,10 @@
                                     <div>
                                         <t t-esc="o.journal_id.name"/>
                                     </div>
+                                    <br/>
+                                    <div>
+                                        Fecha de Emisión: <t t-esc="o.invoice_date"/>
+                                    </div>
                                 </div>
                             </div>
                             <br/>
