@@ -18,14 +18,15 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['account', 'point_of_sale', 'l10n_cl_edi'],
+    'depends': ['account', 'point_of_sale', 'l10n_cl_edi', 'l10n_cl_edi_boletas'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'data/journal_data.xml',
         'views/account_journal_views.xml',
-        'views/pos_config_inherit.xml'
+        'views/pos_config_inherit.xml',
+        'views/report_invoice_ticket.xml',
     ],
     'assets': {
         'point_of_sale.assets': [

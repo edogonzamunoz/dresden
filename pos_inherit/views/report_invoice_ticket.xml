@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_ticket" model="report.paperformat">
+            <field name="name">Ticket Invoice</field>
+            <field name="format">custom</field>
+            <field name="page_height">400</field>
+            <field name="page_width">72</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">3</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">100</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="account_invoices_ticket" model="ir.actions.report">
+            <field name="name">Invoices</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_inherit.report_invoice_ticket</field>
+            <field name="report_file">pos_inherit.report_invoice_ticket</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment">(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')
+            </field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),
+ (4, ref('account.group_account_readonly'))]"/>
+        </record>
+
+        <template id="report_invoice_ticket">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size:12px;">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="row">
+                                <div class="col-3">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                         class="float-start" alt="Logo" width="90px;" height="90px;"/>
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-6">
+                                    <div name="right-upper-side" class="col-12">
+                                        <div class="row">
+                                            <div name="right-upper-side" class="col-12">
+                                                <div class="row border border-dark">
+                                                    <div class="col-12 text-center">
+                                                        <div t-att-style="'color: %s;' % o.company_id.primary_color">
+                                                            <strong t-att-style="'color: %s;' % o.company_id.primary_color">
+                                                                <br/>
+                                                                <span style="line-height: 180%;">RUT:</span>
+                                                                <t t-if="o.company_id.partner_id.vat">
+                                                                    <span t-esc="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                                                </t>
+                                                                <br/>
+                                                                <span class="text-uppercase"
+                                                                      t-esc="o.l10n_latam_document_type_id.name"/>
+                                                                <br/>
+                                                                <span>Nº:</span>
+                                                                <span style="line-height: 200%;"
+                                                                      t-esc="int(o.l10n_latam_document_number)"/>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row text-center">
+                                                    <div class="col-12 text-center"
+                                                         t-att-style="'color: %s;' % o.company_id.primary_color"
+                                                         name="regional-office">
+                                                        SII:
+                                                        <span t-field="o.company_id.l10n_cl_sii_regional_office"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div style="font-size:14px;">
+                                <span t-esc="o.company_id.name"/>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div id="informations" class="col-12">
+                                    <div>GIRO:
+                                        <t t-esc="o.company_id.l10n_cl_activity_description"/>
+                                    </div>
+                                    <br/>
+                                    <div>DIRECCION:
+                                        <t t-if="o.company_id.street"><t t-esc="o.company_id.street"/>,
+                                        </t>
+                                        <t t-if="o.company_id.street2"><t t-esc="o.company_id.street2"/>,
+                                        </t>
+                                        <t t-if="o.company_id.city"><t t-esc="o.company_id.city"/>,
+                                        </t>
+                                        <t t-if="o.company_id.state_id"><t t-esc="o.company_id.state_id.name"/>,
+                                        </t>
+                                        <t t-esc="o.company_id.country_id.name"/>
+                                    </div>
+                                    <br/>
+                                    <div>FONO:
+                                        <t t-esc="o.company_id.phone"/>
+                                    </div>
+                                    <br/>
+                                    <div>EMAIL:
+                                        <t t-esc="o.company_id.email"/>
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        <t t-esc="o.journal_id.name"/>
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        <t t-esc="o.journal_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
+                                <thead>
+                                    <tr>
+                                        <th name="th_description" class="text-start">
+                                            <span>Descripción</span>
+                                        </th>
+                                        <th name="th_subtotal" class="text-end">
+                                            <span groups="account.group_show_line_subtotals_tax_excluded">Monto</span>
+                                            <span groups="account.group_show_line_subtotals_tax_included">Total Price
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="invoice_tbody">
+                                    <t t-set="current_subtotal" t-value="0"/>
+                                    <t t-set="lines"
+                                       t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+
+                                    <t t-foreach="lines" t-as="line">
+                                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"
+                                           groups="account.group_show_line_subtotals_tax_excluded"/>
+                                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total"
+                                           groups="account.group_show_line_subtotals_tax_included"/>
+
+                                        <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                            <t t-if="line.display_type == 'product'"
+                                               name="account_invoice_line_accountable">
+                                                <td name="account_invoice_line_name">
+                                                    <span t-field="line.product_id.name"
+                                                          t-options="{'widget': 'text'}"/>
+                                                </td>
+                                                <td class="text-end o_price_total">
+                                                    <span class="text-nowrap" t-field="line.price_subtotal"
+                                                          groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                    <span class="text-nowrap" t-field="line.price_total"
+                                                          groups="account.group_show_line_subtotals_tax_included"/>
+                                                </td>
+                                            </t>
+                                            <t t-if="line.display_type == 'line_section'">
+                                                <td colspan="99">
+                                                    <span t-field="line.product_id.name"
+                                                          t-options="{'widget': 'text'}"/>
+                                                </td>
+                                                <t t-set="current_section" t-value="line"/>
+                                                <t t-set="current_subtotal" t-value="0"/>
+                                            </t>
+                                            <t t-if="line.display_type == 'line_note'">
+                                                <td colspan="99">
+                                                    <span t-field="line.product_id.name"
+                                                          t-options="{'widget': 'text'}"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+
+                                        <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
+                                            <tr class="is-subtotal text-end">
+                                                <td colspan="99">
+                                                    <strong class="mr16">Subtotal</strong>
+                                                    <span
+                                                            t-esc="current_subtotal"
+                                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <div class="clearfix mb-6">
+                                <div id="total" class="row">
+                                    <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-11 col-md-10'} ms-auto">
+                                        <table class="table table-sm table-borderless"
+                                               style="page-break-inside: avoid;">
+
+                                            <!--Tax totals-->
+                                            <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                                <tr class="border-black o_subtotal">
+                                                    <td>
+                                                        <strong>Neto</strong>
+                                                    </td>
+
+                                                    <td class="text-end">
+                                                        <span
+                                                                t-att-class="oe_subtotal_footer_separator"
+                                                                t-esc="subtotal['formatted_amount']"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                                <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                                                <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]"
+                                                   t-as="amount_by_group">
+                                                    <tr>
+                                                        <td>
+                                                            <span class="text-nowrap"
+                                                                  t-esc="amount_by_group['tax_group_name']"/>
+                                                        </td>
+                                                        <td class="text-end o_price_total">
+                                                            <span class="text-nowrap"
+                                                                  t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+
+                                            <t t-set="has_rounding"
+                                               t-value="'formatted_amount_total_rounded' in tax_totals"/>
+                                            <!--Total amount with all taxes-->
+                                            <tr class="border-black o_total">
+                                                <t t-if="has_rounding">
+                                                    <td>Total</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td>
+                                                        <strong>Monto Total</strong>
+                                                    </td>
+                                                </t>
+                                                <td class="text-end">
+                                                    <span t-esc="tax_totals['formatted_amount_total']"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="has_rounding">
+                                                <td>
+                                                    <strong>Total Rounded</strong>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="tax_totals['formatted_amount_total_rounded']"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <t t-if="o.l10n_cl_sii_barcode">
+                                    <t t-set="barcode_stamp" t-value="o._pdf417_barcode(o.l10n_cl_sii_barcode)"/>
+                                    <t t-if="barcode_stamp">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <img class="img-fluid"
+                                                     t-attf-src="data:image/*;base64,{{barcode_stamp}}"/>
+                                            </div>
+                                        </div>
+
+                                    </t>
+
+                                </t>
+                            </div>
+                            <div class="row">
+                                <div class="12">
+                                    <p t-att-style="'color: %s;' % o.company_id.primary_color"
+                                       class="text-center small">
+                                        Timbre Electrónico SII
+                                        <br/>
+                                        Resolución Nº:
+                                        <span t-field="o.company_id.l10n_cl_dte_resolution_number"/>
+                                        de Fecha:
+                                        <span t-field="o.company_id.l10n_cl_dte_resolution_date"
+                                              t-options='{"widget": "date"}'/>
+                                        <span name="verification_url">Verifique documento en www.sii.cl
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
