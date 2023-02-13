@@ -90,13 +90,7 @@
                                         <t t-esc="o.company_id.l10n_cl_activity_description"/>
                                     </div>
                                     <br/>
-                                    <t t-if="o.l10n_latam_document_type_id.code != '39'">
-                                        <div>Cliente:
-                                            <t t-esc="o.partner_id.name"/>
-                                        </div>
-                                        <br/>
-                                    </t>
-                                    <div>DIRECCION:
+                                    <div>DIRECCIÓN:
                                         <t t-if="o.company_id.street"><t t-esc="o.company_id.street"/>,
                                         </t>
                                         <t t-if="o.company_id.street2"><t t-esc="o.company_id.street2"/>,
@@ -124,6 +118,29 @@
                                         Fecha de Emisión: <t t-esc="o.invoice_date"/>
                                     </div>
                                 </div>
+                                <t t-if="o.l10n_latam_document_type_id.code != '39'">
+                                    <div id="client" class="col-12">
+                                        <div>:
+                                            <t t-esc="o.partner_id.name"/>
+                                        </div>
+                                        <br/>
+                                        <div>Cliente:
+                                            <t t-esc="o.partner_id.vat"/>
+                                        </div>
+                                        <br/>
+                                        <div>DIRECCIÓN:
+                                            <t t-if="o.partner_id.street"><t t-esc="o.partner_id.street"/>,
+                                            </t>
+                                            <t t-if="o.partner_id.street2"><t t-esc="o.partner_id.street2"/>,
+                                            </t>
+                                            <t t-if="o.partner_id.city"><t t-esc="o.partner_id.city"/>,
+                                            </t>
+                                            <t t-if="o.partner_id.state_id"><t t-esc="o.partner_id.state_id.name"/>,
+                                            </t>
+                                            <t t-esc="o.partner_id.country_id.name"/>
+                                        </div>
+                                    </div>
+                                </t>
                             </div>
                             <br/>
                             <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
