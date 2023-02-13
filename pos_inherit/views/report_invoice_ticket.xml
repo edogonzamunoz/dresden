@@ -117,14 +117,13 @@
                                     <div>
                                         Fecha de Emisión: <t t-esc="o.invoice_date"/>
                                     </div>
-                                </div>
-                                <t t-if="o.l10n_latam_document_type_id.code != '39'">
-                                    <div id="client" class="col-12">
-                                        <div>:
+                                    <t t-if="o.l10n_latam_document_type_id.code != '39'">
+                                        <br/>
+                                        <div>Cliente:
                                             <t t-esc="o.partner_id.name"/>
                                         </div>
                                         <br/>
-                                        <div>Cliente:
+                                        <div>RUT:
                                             <t t-esc="o.partner_id.vat"/>
                                         </div>
                                         <br/>
@@ -139,8 +138,9 @@
                                             </t>
                                             <t t-esc="o.partner_id.country_id.name"/>
                                         </div>
-                                    </div>
-                                </t>
+                                    </t>
+                                </div>
+
                             </div>
                             <br/>
                             <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
