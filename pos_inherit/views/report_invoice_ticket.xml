@@ -90,7 +90,7 @@
                                         <t t-esc="o.company_id.l10n_cl_activity_description"/>
                                     </div>
                                     <br/>
-                                    <div>DIRECCION:
+                                    <div>DIRECCIÓN:
                                         <t t-if="o.company_id.street"><t t-esc="o.company_id.street"/>,
                                         </t>
                                         <t t-if="o.company_id.street2"><t t-esc="o.company_id.street2"/>,
@@ -113,20 +113,44 @@
                                     <div>
                                         <t t-esc="o.journal_id.name"/>
                                     </div>
+                                    <br/>
+                                    <div>
+                                        Fecha de Emisión: <t t-esc="o.invoice_date"/>
+                                    </div>
+                                    <t t-if="o.l10n_latam_document_type_id.code != '39'">
+                                        <br/>
+                                        <div>Cliente:
+                                            <t t-esc="o.partner_id.name"/>
+                                        </div>
+                                        <br/>
+                                        <div>RUT:
+                                            <t t-esc="o.partner_id.vat"/>
+                                        </div>
+                                        <br/>
+                                        <div>DIRECCIÓN:
+                                            <t t-if="o.partner_id.street"><t t-esc="o.partner_id.street"/>,
+                                            </t>
+                                            <t t-if="o.partner_id.street2"><t t-esc="o.partner_id.street2"/>,
+                                            </t>
+                                            <t t-if="o.partner_id.city"><t t-esc="o.partner_id.city"/>,
+                                            </t>
+                                            <t t-if="o.partner_id.state_id"><t t-esc="o.partner_id.state_id.name"/>,
+                                            </t>
+                                            <t t-esc="o.partner_id.country_id.name"/>
+                                        </div>
+                                    </t>
                                 </div>
+
                             </div>
                             <br/>
                             <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
                                 <thead>
                                     <tr>
-                                        <th name="th_description" class="text-start">
+                                        <th name="th_description" class="text-start" colspan="4">
                                             <span>Descripción</span>
                                         </th>
-                                        <th name="th_subtotal" class="text-end">
-                                            <span groups="account.group_show_line_subtotals_tax_excluded">Monto</span>
-                                            <span groups="account.group_show_line_subtotals_tax_included">Total Price
-                                            </span>
-                                        </th>
+                                        <th name="th_quantity" class="text-end" colspan="1"><span>Cant</span></th>
+                                        <th name="th_priceunit" class="text-end" colspan="2"><span>Monto</span></th>
                                     </tr>
                                 </thead>
                                 <tbody class="invoice_tbody">
@@ -143,15 +167,15 @@
                                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                             <t t-if="line.display_type == 'product'"
                                                name="account_invoice_line_accountable">
-                                                <td name="account_invoice_line_name">
+                                                <td name="account_invoice_line_name" colspan="4">
                                                     <span t-field="line.product_id.name"
                                                           t-options="{'widget': 'text'}"/>
                                                 </td>
-                                                <td class="text-end o_price_total">
-                                                    <span class="text-nowrap" t-field="line.price_subtotal"
-                                                          groups="account.group_show_line_subtotals_tax_excluded"/>
-                                                    <span class="text-nowrap" t-field="line.price_total"
-                                                          groups="account.group_show_line_subtotals_tax_included"/>
+                                                <td>
+                                                    <span t-field="line.quantity" colspan="1"/>
+                                                </td>
+                                                <td t-attf-class="text-end" style="font-size:11px" colspan="2">
+                                                    <span class="text-nowrap" t-field="line.price_unit"/>
                                                 </td>
                                             </t>
                                             <t t-if="line.display_type == 'line_section'">
