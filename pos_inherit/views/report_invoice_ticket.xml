@@ -165,7 +165,7 @@
                                            groups="account.group_show_line_subtotals_tax_included"/>
 
                                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
-                                            <t t-if="line.display_type == 'product'"
+                                            <t t-if="line.display_type == 'product' and line.product_id.name != 'PROPINA SUGERIDA'"
                                                name="account_invoice_line_accountable">
                                                 <td name="account_invoice_line_name" class="text-start"  style="font-size:9px" colspan="4">
                                                     <span t-field="line.product_id.name"
@@ -211,11 +211,12 @@
                             <div class="clearfix mb-6">
                                 <div id="total" class="row">
                                     <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-11 col-md-10'} ms-auto">
-                                        <table class="table table-sm table-borderless"
-                                               style="page-break-inside: avoid;">
-
+                                        <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
+                                            <t t-set="product" t-value="o.line_ids.filtered(lambda l: l.product_id.name == 'Propinas')"/>
                                             <!--Tax totals-->
                                             <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                            <t t-set="neto" t-value="float(tax_totals['amount_untaxed']) - product.price_unit"/>
+                                            <t t-set="iva" t-value="float(tax_totals['amount_total']) - float(tax_totals['amount_untaxed'])"/>
                                             <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                                                 <tr class="border-black o_subtotal">
                                                     <td>
@@ -223,30 +224,24 @@
                                                     </td>
 
                                                     <td class="text-end">
-                                                        <span
-                                                                t-att-class="oe_subtotal_footer_separator"
-                                                                t-esc="subtotal['formatted_amount']"
-                                                        />
+                                                        <span t-att-class="oe_subtotal_footer_separator" t-esc="neto"/>
                                                     </td>
                                                 </tr>
                                                 <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
-                                                <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]"
-                                                   t-as="amount_by_group">
+                                                <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                                                     <tr>
                                                         <td>
-                                                            <span class="text-nowrap"
-                                                                  t-esc="amount_by_group['tax_group_name']"/>
+                                                            <span class="text-nowrap" t-esc="amount_by_group['tax_group_name']"/>
                                                         </td>
                                                         <td class="text-end o_price_total">
-                                                            <span class="text-nowrap"
-                                                                  t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                                            <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
                                                         </td>
                                                     </tr>
                                                 </t>
                                             </t>
 
-                                            <t t-set="has_rounding"
-                                               t-value="'formatted_amount_total_rounded' in tax_totals"/>
+                                            <t t-set="has_rounding" t-value="'formatted_amount_total_rounded' in tax_totals"/>
+                                            <t t-set="total" t-value="neto + iva"/>
                                             <!--Total amount with all taxes-->
                                             <tr class="border-black o_total">
                                                 <t t-if="has_rounding">
@@ -257,6 +252,22 @@
                                                         <strong>Monto Total</strong>
                                                     </td>
                                                 </t>
+                                                <td class="text-end">
+                                                    <span t-esc="total"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong><span t-esc="product.product_id.name"/></strong>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="product.price_unit"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-black o_total">
+                                                <td>
+                                                    <strong>Total a pagar</strong>
+                                                </td>
                                                 <td class="text-end">
                                                     <span t-esc="tax_totals['formatted_amount_total']"/>
                                                 </td>
