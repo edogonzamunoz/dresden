@@ -212,7 +212,7 @@
                                 <div id="total" class="row">
                                     <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-11 col-md-10'} ms-auto">
                                         <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
-                                            <t t-set="product" t-value="o.line_ids.filtered(lambda l: l.product_id.name == 'Propinas')"/>
+                                            <t t-set="product" t-value="o.line_ids.filtered(lambda l: l.product_id.name == 'PROPINA SUGERIDA')"/>
                                             <!--Tax totals-->
                                             <t t-set="tax_totals" t-value="o.tax_totals"/>
                                             <t t-set="neto" t-value="float(tax_totals['amount_untaxed']) - product.price_unit"/>
