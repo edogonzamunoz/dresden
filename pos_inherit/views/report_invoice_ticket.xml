@@ -34,7 +34,7 @@
         <template id="report_invoice_ticket">
             <t t-call="web.html_container">
                 <t t-call="web.basic_layout">
-                    <div class="page" style="font-size:12px;">
+                    <div class="page" style="font-size:10px;">
                         <t t-foreach="docs" t-as="o">
                             <div class="row">
                                 <div class="col-3">
@@ -80,11 +80,11 @@
                                 </div>
                             </div>
                             <br/>
-                            <div style="font-size:14px;">
+                            <div style="font-size:12px;">
                                 <span t-esc="o.company_id.name"/>
                             </div>
                             <br/>
-                            <div class="row">
+                            <div class="row" style="font-size:10px;">
                                 <div id="informations" class="col-12">
                                     <div>GIRO:
                                         <t t-esc="o.company_id.l10n_cl_activity_description"/>
@@ -143,13 +143,13 @@
 
                             </div>
                             <br/>
-                            <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
+                            <table class="table table-sm o_main_table table-borderless" name="invoice_line_table" style="font-size:11px;">
                                 <thead>
                                     <tr>
                                         <th name="th_description" class="text-start" colspan="4">
                                             <span>Descripción</span>
                                         </th>
-                                        <th name="th_quantity" class="text-end" colspan="1"><span>Cant</span></th>
+                                        <th name="th_quantity" class="text-center" colspan="1"><span>Cant</span></th>
                                         <th name="th_priceunit" class="text-end" colspan="2"><span>Monto</span></th>
                                     </tr>
                                 </thead>
@@ -167,12 +167,12 @@
                                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                             <t t-if="line.display_type == 'product'"
                                                name="account_invoice_line_accountable">
-                                                <td name="account_invoice_line_name" colspan="4">
+                                                <td name="account_invoice_line_name" class="text-start"  style="font-size:9px" colspan="4">
                                                     <span t-field="line.product_id.name"
                                                           t-options="{'widget': 'text'}"/>
                                                 </td>
-                                                <td>
-                                                    <span t-field="line.quantity" colspan="1"/>
+                                                <td class="text-center" style="font-size:11px" colspan="1">
+                                                    <span t-field="line.quantity"/>
                                                 </td>
                                                 <td t-attf-class="text-end" style="font-size:11px" colspan="2">
                                                     <span class="text-nowrap" t-field="line.price_unit"/>
@@ -208,7 +208,6 @@
                                     </t>
                                 </tbody>
                             </table>
-                            <br/>
                             <div class="clearfix mb-6">
                                 <div id="total" class="row">
                                     <div t-attf-class="#{'col-10' if report_type != 'html' else 'col-sm-11 col-md-10'} ms-auto">
