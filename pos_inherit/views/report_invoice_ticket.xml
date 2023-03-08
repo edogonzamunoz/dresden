@@ -150,6 +150,7 @@
                                             <span>Descripción</span>
                                         </th>
                                         <th name="th_quantity" class="text-center" colspan="1"><span>Cant</span></th>
+                                        <th name="th_priceunit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Precio</span></th>
                                         <th name="th_priceunit" class="text-end" colspan="2"><span>Monto</span></th>
                                     </tr>
                                 </thead>
@@ -176,6 +177,10 @@
                                                 </td>
                                                 <td t-attf-class="text-end" style="font-size:11px" colspan="2">
                                                     <span class="text-nowrap" t-field="line.price_unit"/>
+                                                </td>
+                                                <td class="text-end o_price_total">
+                                                    <span class="text-nowrap" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded" t-options='{"widget": "float", "precision": 0, "display_currency": o.currency_id}'/>
+                                                    <span class="text-nowrap" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included" t-options='{"widget": "float", "precision": 0, "display_currency": o.currency_id}'/>
                                                 </td>
                                             </t>
                                             <t t-if="line.display_type == 'line_section'">
@@ -224,7 +229,8 @@
                                                     </td>
 
                                                     <td class="text-end">
-                                                        <span t-att-class="oe_subtotal_footer_separator" t-esc="neto"/>
+                                                        <span t-field="o.currency_id.symbol"/>
+                                                        <span t-att-class="oe_subtotal_footer_separator" t-esc="neto" t-options='{"widget": "float", "precision": 0, "display_currency": o.currency_id}'/>
                                                     </td>
                                                 </tr>
                                                 <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
@@ -253,7 +259,8 @@
                                                     </td>
                                                 </t>
                                                 <td class="text-end">
-                                                    <span t-esc="total"/>
+                                                    <span t-field="o.currency_id.symbol"/>
+                                                    <span t-esc="total" t-options='{"widget": "float", "precision": 0}'/>
                                                 </td>
                                             </tr>
                                             <tr>

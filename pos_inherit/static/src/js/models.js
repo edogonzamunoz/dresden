@@ -68,18 +68,18 @@ odoo.define('pos_inherit.models', function (require) {
     = (Order) => class PosOrderInherit extends Order {
         constructor(obj, options) {
             super(...arguments);
-            this.to_boleta = false;
+            this.to_boleta = true;
         }
 
         init_from_JSON(json) {
             super.init_from_JSON(...arguments);
-            this.to_boleta = false;    // FIXME
+            this.to_boleta = true;    // FIXME
 
         }
 
         export_as_JSON() {
             const json = super.export_as_JSON(...arguments);
-            json.to_boleta = this.to_boleta ? this.to_boleta : false;
+            json.to_boleta = this.to_boleta ? this.to_boleta : true;
             return json;
         }
 
