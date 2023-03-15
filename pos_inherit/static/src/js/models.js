@@ -73,13 +73,12 @@ odoo.define('pos_inherit.models', function (require) {
 
         init_from_JSON(json) {
             super.init_from_JSON(...arguments);
-            this.to_boleta = true;    // FIXME
-
+            this.to_boleta = false
         }
 
         export_as_JSON() {
             const json = super.export_as_JSON(...arguments);
-            json.to_boleta = this.to_boleta ? this.to_boleta : true;
+            json.to_boleta = this.to_boleta ? this.to_boleta : false;
             return json;
         }
 
