@@ -13,5 +13,25 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_pos_order_form_inherit" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the new field after partner_id -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Invoice Info">
+                        <group>
+                            <group>
+                                <field name="l10n_cl_sii_barcode"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        
     </data>
 </odoo>

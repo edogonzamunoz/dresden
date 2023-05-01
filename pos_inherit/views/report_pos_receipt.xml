@@ -1,0 +1,235 @@
+<odoo>
+	<data>
+        <record id="account_pos_receipt_ticket" model="ir.actions.report">
+            <field name="name">POS Receipt Ticket</field>
+            <field name="model">pos.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_inherit.report_pos_receipt_ticket</field>
+            <field name="report_file">pos_inherit.report_pos_receipt_ticket</field>
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')), (4, ref('account.group_account_readonly'))]"/>
+        </record>
+    
+	    <template id="pos_order_report">
+	    	<t t-call="web.html_container">
+	            <t t-call="web.basic_layout">
+	                <div class="page" style="font-size:10px;">
+	                    <t t-foreach="docs" t-as="o">
+					        <div class="pos-receipt">
+					            <div class="pos-header">
+					                <div class="pos-title">
+					                    <span>[[o.company_id.name]]</span>
+					                </div>
+					                <div class="pos-info">
+					                    <span>[[o.company_id.street]]</span>
+					                    <span>[[o.company_id.street2]]</span>
+					                    <span>[[o.company_id.city]]</span>
+					                    <span>[[o.company_id.state_id.name]]</span>
+					                    <span>[[o.company_id.zip]]</span>
+					                    <span>[[o.company_id.country_id.name]]</span>
+					                </div>
+					                <div class="pos-order-info">
+					                    <div class="pos-order-id">
+					                        <span>Order ID: </span>
+					                        <span t-field="o.pos_reference"/></div>
+					                    <div class="pos-order-date">
+					                        <span>Date: </span>
+					                        <span t-field="o.date_order"/></div>
+					                    <div class="pos-order-cashier">
+					                        <span>Cashier: </span>
+					                        <span t-field="o.user_id.name"/></div>
+					                </div>
+					                <div class="pos-order-lines">
+					                    <table>
+					                        <thead>
+					                            <tr>
+					                                <th class="left-align">Product</th>
+					                                <th>Qty</th>
+					                                <th>Price</th>
+					                                <th>Discount</th>
+					                                <th>Subtotal</th>
+					                            </tr>
+					                        </thead>
+					                        <tbody>
+					                            <tr t-foreach="o.lines" t-as="line">
+					                                <td class="left-align">
+					                                    <t t-esc="line.generate_wrapped_product_name()" />
+					                                </td>
+					                                <td>
+					                                    <span t-field="line.qty"/>
+					                                    <t t-if="line.product_uom_id">
+					                                        <span t-field="line.product_uom_id.name"/>
+					                                    </t>
+					                                </td>
+					                                <td>
+					                                    <span t-field="line.price_unit"/>
+					                                </td>
+					                                <td>
+					                                    <span t-field="line.discount"/>
+					                                </td>
+					                                <td>
+					                                    <span t-field="line.price_subtotal"/>
+					                                </td>
+					                            </tr>
+					                        </tbody>
+					                    </table>
+					                </div>
+					                <div class="pos-order-summary">
+					                    <table>
+					                        <tbody>
+					                            <tr>
+					                                <td class="left-align">
+					                                    <span>Subtotal</span>
+					                                </td>
+					                                <td>
+					                                    <span t-esc="o.amount_total - o.amount_tax"/>
+					                                </td>
+					                            </tr>
+					                            <tr>
+					                                <td class="left-align">
+					                                    <span>Tax</span>
+					                                </td>
+					                                <td>
+					                                    <span t-field="o.amount_tax"/>
+					                                </td>
+					                            </tr>
+					                            <tr>
+					                                <td class="left-align">
+					                                    <span>Total</span>
+					                                </td>
+					                                <td>
+					                                    <span t-field="o.amount_total"></span>
+					                                </td>
+					                            </tr>
+					                        </tbody>
+					                    </table>
+					                </div>
+					            </div>
+					        </div>
+					    </t>
+					</div>
+				</t>
+			</t>
+		</template>
+
+
+
+        <template id="report_pos_receipt_ticket">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size:10px;">
+                        <t t-foreach="docs" t-as="o">
+                            <div class="row text-center">
+                            	<div class="col-12">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" width="90px;" height="90px;"/>
+                                     <t t-if="not o.company_id.logo">
+						                <h2 class="pos-receipt-center-align">
+						                    <t t-esc="o.company_id.name" />
+						                </h2>
+						            </t>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row text-center">
+                            	<div class="pos-receipt-contact">
+					                <t t-if="o.company_id.partner_id">
+					                    <div><t t-esc="o.company_id.partner_id.name" /></div>
+					                </t>
+					                <t t-if="o.company_id.phone">
+					                    <div>Tel:<t t-esc="o.company_id.phone" /></div>
+					                </t>
+					                <t t-if="o.company_id.vat">
+					                    <div>TAX ID :<t t-esc="o.company_id.vat" /></div>
+					                </t>
+					                <t t-if="o.company_id.email">
+					                    <div><t t-esc="o.company_id.email" /></div>
+					                </t>
+					                <t t-if="o.company_id.website">
+					                    <div><t t-esc="o.company_id.website" /></div>
+					                </t>
+					                <!-- <t t-if="receipt.header_html">
+					                    <t t-out="receipt.header_html" />
+					                </t>
+					                <t t-if="!receipt.header_html and receipt.header">
+					                    <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
+					                </t> -->
+					                <t t-if="o.user_id">
+					                    <div class="cashier">
+					                        <div>--------------------------------</div>
+					                        <div>Served by : <t t-esc="o.user_id.name" /></div>
+					                    </div>
+					                </t>
+					            </div>                            	
+                            </div>
+                            <br/><br/>
+                            <table class="table table-sm o_main_table table-borderless" id="receipt-table" name="invoice_line_table">
+	                            <thead>
+	                                <tr>
+	                                    <th width="45%"  name="th_description" class="text-start">
+	                                        <span>Product</span>
+	                                    </th>
+	                                    <th width="15%" name="th_quantity" class="text-center" style="text-align:center;" colspan="1"><span>Quantity</span></th>
+	                                    <th width="25%" name="th_priceunit" style="text-align:center;"><span>Unit Price</span></th>
+	                                    <th width="25%" name="th_priceunit" class="text-end" style="text-align:right;" colspan="2"><span>Subtotal</span></th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+	                                <t t-foreach="o.lines" t-as="line" t-key="line.id">
+                        				<tr>
+						            		<td><t t-esc="line.generate_wrapped_product_name()"/></td>
+                            				<td style="text-align:right;"><t t-esc="line.qty"/></td>
+	                            			<td style="text-align:right;"><t t-esc="line.price_unit"/></td>
+	                            			<td style="text-align:right;"><t t-esc="line.price_subtotal_incl"/></td>
+                        				</tr>
+                        				<tr t-if="line.discount">
+                        					<td class="text-muted">With a <t t-esc="line.discount"/>% discount.</td>
+                        				</tr>
+                            		</t>
+                            		<tr>
+                            			<td></td>
+                            			<td></td>
+                            			<td style="text-align:right;">TOTAL</td>
+                            			<td style="text-align:right;"><t t-esc="o.amount_total"/></td>
+                            		</tr>
+	                            </tbody>
+	                        </table>
+                            <br/>
+                            <div class="pos-order-summary" style="float:right;">
+			                    <table class="table table-borderless">
+			                        <tbody>
+			                            <tr>
+			                                <td colspan="2" class="left-align">
+			                                    <span>Subtotal</span>
+			                                </td>
+			                                <td style="text-align:right;">
+			                                    <span t-esc="o.amount_total - o.amount_tax" t-options='{"widget": "float", "precision": 0, "display_currency": o.currency_id}'/>
+			                                </td>
+			                            </tr>
+			                            <tr>
+			                                <td colspan="2" class="left-align">
+			                                    <span>Tax</span>
+			                                </td>
+			                                <td style="text-align:right;">
+			                                    <span t-field="o.amount_tax" t-options='{"widget": "float", "precision": 0, "display_currency": o.currency_id}'/>
+			                                </td>
+			                            </tr>
+			                            <tr>
+			                                <td colspan="2" class="left-align">
+			                                    <span>Total</span>
+			                                </td>
+			                                <td style="text-align:right;">
+			                                    <span t-field="o.amount_total" t-options='{"widget": "float", "precision": 0, "display_currency": o.currency_id}'/>
+			                                </td>
+			                            </tr>
+			                        </tbody>
+			                    </table>
+			                </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

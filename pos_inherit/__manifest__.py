@@ -27,12 +27,14 @@
         'views/account_journal_views.xml',
         'views/pos_config_inherit.xml',
         'views/report_invoice_ticket.xml',
+        'views/report_pos_receipt.xml',
     ],
     'assets': {
         'point_of_sale.assets': [
             'pos_inherit/static/src/js/models.js',
             'pos_inherit/static/src/js/Screens/PaymentScreen/PaymentScreen.js',
-            'pos_inherit/static/src/xml/**/*.xml'
+            'pos_inherit/static/src/xml/**/*.xml',
+            'pos_inherit/static/src/css/style.css',
         ]
     },
     'license': "AGPL-3",

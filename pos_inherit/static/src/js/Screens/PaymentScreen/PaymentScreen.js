@@ -14,7 +14,15 @@ odoo.define('pos_inherit.PaymentScreen', function (require) {
             this.currentOrder.set_to_boleta(!this.currentOrder.is_to_boleta());
             this.render(true);
         }
+
+        toggleIsToVentaCiggaros() {
+            // click_invoice
+            this.currentOrder.set_to_venta_ciggaros(!this.currentOrder.is_to_venta_ciggaros());
+            this.render(true);
+        }
+
         async _finalizeValidation() {
+
             if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer) {
                 this.env.proxy.printer.open_cashbox();
             }
@@ -30,15 +38,26 @@ odoo.define('pos_inherit.PaymentScreen', function (require) {
 
                 // 2. Invoice.
                 if (this.currentOrder.is_to_invoice() || this.currentOrder.is_to_boleta()) {
-                    if (syncOrderResult.length) {
-                        await this.env.legacyActionManager.do_action('pos_inherit.account_invoices_ticket', {
-                            additional_context: {
-                                active_ids: [syncOrderResult[0].account_move],
-                            },
-                        });
-                    } else {
-                        throw { code: 401, message: 'Backend Invoice', data: { order: this.currentOrder } };
-                    }
+                    // if (syncOrderResult.length) {
+                    //     await this.env.legacyActionManager.do_action('pos_inherit.account_invoices_ticket', {
+                    //         additional_context: {
+                    //             active_ids: [syncOrderResult[0].account_move],
+                    //         },
+                    //     });
+                    // } else {
+                    //     throw { code: 401, message: 'Backend Invoice', data: { order: this.currentOrder } };
+                    // }
+                }
+                if (this.currentOrder.is_to_venta_ciggaros()){
+                    // if (syncOrderResult.length) {
+                    //     await this.env.legacyActionManager.do_action('pos_inherit.account_pos_receipt_ticket', {
+                    //         additional_context: {
+                    //             active_ids: [syncOrderResult[0].id],
+                    //         },
+                    //     });
+                    // } else {
+                    //     throw { code: 401, message: 'Backend Invoice', data: { order: this.currentOrder } };
+                    // }
                 }
 
                 // 3. Post process.
@@ -121,6 +140,14 @@ odoo.define('pos_inherit.PaymentScreen', function (require) {
                 if (confirmed) {
                     this.selectPartner();
                 }
+                return false;
+            }
+
+            if (!(this.currentOrder.is_to_invoice() || this.currentOrder.is_to_boleta() || this.currentOrder.is_to_venta_ciggaros())){
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Error: No Document Selected'),
+                    body: this.env._t('Please select a document type to confirm the order.'),
+                });
                 return false;
             }
 
