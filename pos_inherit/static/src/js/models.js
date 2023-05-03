@@ -47,6 +47,7 @@ odoo.define('pos_inherit.models', function (require) {
                     });
                     self.failed = false;
                     self.set_synch('connected');
+                    self.get_order().invoice_id = server_ids;
                     return server_ids;
                 }).catch(function (error){
                     console.warn('Failed to send orders:', orders);
@@ -63,47 +64,46 @@ odoo.define('pos_inherit.models', function (require) {
                 });
         }
 
-        _flush_orders(orders, options) {
-            console.log('in flush order');
-            var self = this;
-            var result, data
-            result = data = super._flush_orders(...arguments)
-            _.each(orders, function (order) {
-                if (self.get_order() && (order["data"].name === self.get_order().name)) {
-                    if (order["data"].to_invoice || order["data"].to_boleta) {
-                        data.then(function (order_server_id) {
-                            console.log("order_erver_id", order_server_id)
-                            _.each(order_server_id, function (server_id) {
-                                rpc.query({
-                                    model: 'pos.order',
-                                    method: 'get_invoice_info',
-                                    args: [server_id.id, ['account_move']],
-                                    kwargs: {pos_reference: posmodel.get_order()['name']},
-                                }).then(function (result_dict) {
-                                    if (result_dict) {
-                                        let invoice = result_dict;//result_dict[0].account_move;
-                                        console.log('then invoice', invoice);
-                                        self.get_order().invoice_id = invoice
-                                    }
-                                })
-                                    .catch(function (error) {
-                                        console.log('catch result', result);
-                                        return result
+        // _flush_orders(orders, options) {
+        //     console.log('in flush order');
+        //     var self = this;
+        //     var result, data
+        //     result = data = super._flush_orders(...arguments)
+        //     _.each(orders, function (order) {
+        //         if (self.get_order() && (order["data"].name === self.get_order().name)) {
+        //             if (order["data"].to_invoice || order["data"].to_boleta) {
+        //                 data.then(function (order_server_id) {
+        //                     console.log("order_erver_id", order_server_id)
+        //                     _.each(order_server_id, function (server_id) {
+        //                         rpc.query({
+        //                             model: 'pos.order',
+        //                             method: 'get_invoice_info',
+        //                             args: [server_id.id, ['account_move']],
+        //                             kwargs: {pos_reference: posmodel.get_order()['name']},
+        //                         }).then(function (result_dict) {
+        //                             if (result_dict) {
+        //                                 let invoice = result_dict;//result_dict[0].account_move;
+        //                                 console.log('then invoice', invoice);
+        //                                 self.get_order().invoice_id = invoice
+        //                             }
+        //                         }).catch(function (error) {
+        //                             console.log('catch result', result);
+        //                             return result
 
-                                    })
+        //                         })
 
-                            });
+        //                     });
 
-                        })
-                    }
-                }
+        //                 })
+        //             }
+        //         }
 
-            })
-            console.log('flush order result', result);
-            return result
+        //     })
+        //     console.log('flush order result', result);
+        //     return result
 
 
-        }
+        // }
     }
 
     const L10N_CL_SII_REGIONAL_OFFICE = {
@@ -238,12 +238,12 @@ odoo.define('pos_inherit.models', function (require) {
             var self = this;
 
             if (self.invoice_id){
-                data['invoice_id'] = self.invoice_id;
-                data['l10n_latam_document_name'] = self.invoice_id.l10n_latam_document_name;
-                data['l10n_latam_document_code'] = self.invoice_id.l10n_latam_document_code;
-                data['l10n_latam_document_number'] = self.invoice_id.l10n_latam_document_number;
-                data['invoice_barcode_stamp'] = self.invoice_id.invoice_barcode_stamp;
-                data['journal_id'] = self.invoice_id.journal_id;                
+                data['invoice_id'] = self.invoice_id[0];
+                data['l10n_latam_document_name'] = self.invoice_id[0].l10n_latam_document_name;
+                data['l10n_latam_document_code'] = self.invoice_id[0].l10n_latam_document_code;
+                data['l10n_latam_document_number'] = self.invoice_id[0].l10n_latam_document_number;
+                data['invoice_barcode_stamp'] = self.invoice_id[0].invoice_barcode_stamp;
+                data['journal_id'] = self.invoice_id[0].journal_id;                
             }
 
             data['is_to_invoice'] = self.is_to_invoice();

@@ -60,7 +60,7 @@ class PosOrder(models.Model):
         return vals
 
 
-    def get_invoice_info(self, *args, **kwargs):
+    def get_invoice_info(self):
         l10n_latam_document_name = self.account_move.l10n_latam_document_type_id.name
         l10n_latam_document_code = self.account_move.l10n_latam_document_type_id.code
         l10n_latam_document_number = self.account_move.l10n_latam_document_number
@@ -74,8 +74,34 @@ class PosOrder(models.Model):
             'journal_id':self.account_move.journal_id.name,
         }
 
-    def _get_invoice_latam_document_info(self, reference):
-        import pdb;pdb.set_trace()
+    @api.model
+    def create_from_ui(self, orders, draft=False):
+        """ Create and update Orders from the frontend PoS application.
+
+        Create new orders and update orders that are in draft status. If an order already exists with a status
+        diferent from 'draft'it will be discareded, otherwise it will be saved to the database. If saved with
+        'draft' status the order can be overwritten later by this function.
+
+        :param orders: dictionary with the orders to be created.
+        :type orders: dict.
+        :param draft: Indicate if the orders are ment to be finalised or temporarily saved.
+        :type draft: bool.
+        :Returns: list -- list of db-ids for the created and updated orders.
+        """
+        order_ids = []
+        for order in orders:
+            existing_order = False
+            if 'server_id' in order['data']:
+                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
+            if (existing_order and existing_order.state == 'draft') or not existing_order:
+                order_ids.append(self._process_order(order, draft, existing_order))
+
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        for data in res:
+            order_data = self.browse(data['id']).get_invoice_info()
+            data.update(order_data)
+
+        return res
 
 
 class PosOrderLine(models.Model):
