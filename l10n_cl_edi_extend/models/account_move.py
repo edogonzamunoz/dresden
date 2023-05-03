@@ -106,3 +106,9 @@ class AccountMove(models.Model):
             self.l10n_cl_dte_file = dte_attachment.id
         else:
             super(AccountMove, self)._l10n_cl_create_dte()
+
+    def action_delete_attachment_pdf(self):
+        invoices = self.env['account.move'].search([])
+        for attac in invoices.attachment_ids:
+            if attac.name.split('.')[1] == 'pdf':
+                attac._file_delete(attac.store_fname)
