@@ -5,7 +5,7 @@
             <div class="button js_invoice"
                 t-att-class="{ highlight: currentOrder.is_to_invoice() }"
                 t-on-click="toggleIsToInvoice">
-                <i class="fa fa-file-text-o" /> Invoice / N. Credito
+                <i class="fa fa-file-text-o" /> Factura / N. Credito
             </div>
         </xpath>
         <xpath expr="//div[hasclass('payment-controls')]" position="after">
@@ -156,11 +156,10 @@
                             <br/>   
                         </div>
                         <div class="row" style="font-size:10px;">
-                            <div id="informations" class="col-12">
+                            <div id="informations" class="col-12" style="line-height:16px;">
                                 <div>GIRO:
                                     <t t-esc="env.pos.company.l10n_cl_activity_description"/>
                                 </div>
-                                <br/>
                                 <div>DIRECCIÓN:
                                     <t t-if="env.pos.company.street"><t t-esc="env.pos.company.street"/>,
                                     </t>
@@ -174,32 +173,25 @@
                                         <t t-esc="env.pos.company.country_id[1]"/>
                                     </t>
                                 </div>
-                                <br/>
                                 <div>FONO:
                                     <t t-esc="receipt.company.phone"/>
                                 </div>
-                                <br/>
                                 <div>EMAIL:
                                     <t t-esc="receipt.company.email"/>
                                 </div>
-                                <br/>
                                 <div>
                                     <t t-esc="receipt.journal_id"/>
                                 </div>
-                                <br/>
                                 <div>
                                     Fecha de Emisión: <t t-esc="receipt.date"/>
                                 </div>
                                 <t t-if="receipt.l10n_latam_document_code != '39'">
-                                    <br/>
                                     <div>Cliente:
                                         <t t-esc="receipt.partner.name"/>
                                     </div>
-                                    <br/>
                                     <div>RUT:
                                         <t t-esc="receipt.partner.vat"/>
                                     </div>
-                                    <br/>
                                     <div>DIRECCIÓN:
                                         <t t-if="receipt.partner.street"><t t-esc="receipt.partner.street"/>,
                                         </t>
@@ -215,7 +207,6 @@
                             </div>
 
                         </div>
-                        <br/>
                         <table class="table table-sm o_main_table table-borderless" id="receipt-table" name="invoice_line_table">
                             <thead>
                                 <tr>
@@ -286,7 +277,7 @@
                                         </t>
                                         <tr>
                                             <td><strong>Total a pagar</strong></td>
-                                            <td style="text-align:right"><strong><t t-esc="env.pos.format_currency(total_paid)"/></strong></td>
+                                            <td style="text-align:right"><strong><t t-esc="env.pos.format_currency(receipt.total_with_tax+receipt.rounding_applied)"/></strong></td>
                                         </tr>
                                         <tr>
                                             <td><strong>Total Rounding</strong></td>
