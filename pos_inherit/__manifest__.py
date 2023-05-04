@@ -3,7 +3,7 @@
     'name': "Pos",
 
     'summary': """
-        Herencia del pos New""",
+        Herencia del pos""",
 
     'description': """
         Herencia del pos

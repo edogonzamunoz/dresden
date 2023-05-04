@@ -64,7 +64,9 @@ class PosOrder(models.Model):
         l10n_latam_document_name = self.account_move.l10n_latam_document_type_id.name
         l10n_latam_document_code = self.account_move.l10n_latam_document_type_id.code
         l10n_latam_document_number = self.account_move.l10n_latam_document_number
-        invoice_barcode_stamp = self.account_move._pdf417_barcode(self.account_move.l10n_cl_sii_barcode)
+        invoice_barcode_stamp = ""
+        if self.account_move:
+            invoice_barcode_stamp = self.account_move._pdf417_barcode(self.account_move.l10n_cl_sii_barcode)
 
         return {
             'l10n_latam_document_name':l10n_latam_document_name,
