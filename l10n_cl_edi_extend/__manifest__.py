@@ -26,6 +26,7 @@
         'template/dte_template.xml',
         'template/dd_template.xml',
         'template/envio_dte_template.xml',
+        'data/action_delete_attachment.xml'
     ],
     'license': "AGPL-3",
     'installable': True,
