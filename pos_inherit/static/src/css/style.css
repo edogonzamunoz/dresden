@@ -1,0 +1,64 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.left, .center, .right {
+  flex: 1;
+}
+
+.left {
+  flex-basis: 40%; 
+  /*background-color: #ddd;*/
+}
+
+.center {
+  /*background-color: #eee;*/
+}
+
+.right {
+  flex-basis: 60%; 
+  /*background-color: #ccc;*/
+}
+
+.left-25 {
+  flex-basis: 40%; 
+  /*background-color: #ddd;*/
+}
+
+.center {
+  /*background-color: #eee;*/
+}
+
+.right-75 {
+  flex-basis: 60%; 
+  /*background-color: #ccc;*/
+}
+
+.border-dark{
+  border: 1px solid;
+  padding: 10px;
+  text-align: center;
+}
+#receipt-table, #summary-table{
+  font-size: 10px;
+  width: 100%;
+}
+
+#receipt-table thead tr{
+  border-bottom: 1px solid black;
+}
+
+#receipt-table td, #receipt-table th, #summary-table td, #summary-table th {
+    padding: 8px 0px;
+}
+
+#summary-table tr.border-top{
+  border-top: 1px solid black;
+}
+
+.factura-footer{
+    font-size: 12px !important;
+    line-height: 17px;
+    text-align: center;
+}
