@@ -252,7 +252,10 @@ odoo.define('pos_inherit.models', function (require) {
             data['dotted_vat'] = self._format_dotted_vat_cl(data.company.vat);
             data.company['primary_color'] = self.pos.company.primary_color;
             data['l10n_cl_sii_regional_office'] = L10N_CL_SII_REGIONAL_OFFICE[self.pos.company.l10n_cl_sii_regional_office];
-            data['date'] = field_utils.format.date(moment(data.date), {}, {timezone: false});
+
+            const currentDate = new Date();
+            data['date'] = field_utils.format.date(moment(currentDate), {}, {timezone: false});
+
             return data;
         }
 
