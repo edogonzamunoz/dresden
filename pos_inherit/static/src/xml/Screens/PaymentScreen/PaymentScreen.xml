@@ -142,7 +142,7 @@
                                                     SII:
                                                     <span t-esc="receipt.l10n_cl_sii_regional_office"/>
                                                 </div>
-                                            </div>                                        
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -153,8 +153,61 @@
                             <div style="font-size:12px;">
                                 <span t-esc="receipt.company.name"/>
                             </div>
-                            <br/>   
+                            <br/>
                         </div>
+                        <t t-if='receipt.address_change_id'>
+                        <div class="row" style="font-size:10px;">
+                            <div id="informations" class="col-12" style="line-height:16px;">
+                                <div>GIRO:
+                                    <t t-esc="receipt.address_change_activity_description"/>
+                                </div>
+                                <div>DIRECCIÓN:
+                                    <t t-if="receipt.address_change_street"><t t-esc="receipt.address_change_street"/>,
+                                    </t>
+                                    <t t-if="receipt.address_change_street2"><t t-esc="receipt.address_change_street2"/>,
+                                    </t>
+                                    <t t-if="receipt.address_change_city"><t t-esc="receipt.address_change_city"/>,
+                                    </t>
+                                    <t t-if="env.pos.company.country_id">
+                                        <t t-esc="env.pos.company.country_id[1]"/>
+                                    </t>
+                                </div>
+                                <div>FONO:
+                                    <t t-esc="receipt.address_change_phone"/>
+                                </div>
+                                <div>EMAIL:
+                                    <t t-esc="receipt.company.email"/>
+                                </div>
+                                <div>
+                                    <t t-esc="receipt.journal_id"/>
+                                </div>
+                                <div>
+                                    Fecha de Emisión: <t t-esc="receipt.date"/>
+                                </div>
+                                <t t-if="receipt.l10n_latam_document_code != '39'">
+                                    <div>Cliente:
+                                        <t t-esc="receipt.partner.name"/>
+                                    </div>
+                                    <div>RUT:
+                                        <t t-esc="receipt.partner.vat"/>
+                                    </div>
+                                    <div>DIRECCIÓN:
+                                        <t t-if="receipt.partner.street"><t t-esc="receipt.partner.street"/>,
+                                        </t>
+                                        <t t-if="receipt.partner.street2"><t t-esc="receipt.partner.street2"/>,
+                                        </t>
+                                        <t t-if="receipt.partner.city"><t t-esc="receipt.partner.city"/>,
+                                        </t>
+                                        <t t-if="receipt.partner.state_id"><t t-esc="receipt.partner.state_id[1]"/>,
+                                        </t>
+                                        <t t-esc="receipt.partner.country_id[1]"/>
+                                    </div>
+                                </t>
+                            </div>
+
+                        </div>
+                        </t>
+                        <t t-else=''>
                         <div class="row" style="font-size:10px;">
                             <div id="informations" class="col-12" style="line-height:16px;">
                                 <div>GIRO:
@@ -207,6 +260,7 @@
                             </div>
 
                         </div>
+                        </t>
                         <table class="table table-sm o_main_table table-borderless" id="receipt-table" name="invoice_line_table">
                             <thead>
                                 <tr>
@@ -264,7 +318,7 @@
                                         <tr class="border-top">
                                             <td><strong>Monto Total</strong></td>
                                             <td style="text-align:right;"><span t-esc="env.pos.format_currency(receipt.total_with_tax)" style="text-align:right;"/></td>
-                                        </tr> 
+                                        </tr>
                                         <!-- <tr>
                                             <td></td>
                                             <td style="text-align:right;">0.0</td>
@@ -284,7 +338,7 @@
                                             <td style="text-align:right"><strong><span t-esc='env.pos.format_currency(receipt.rounding_applied)' class="pos-receipt-right-align"/></strong></td>
                                         </tr>
                                     </tbody>
-                                </table>   
+                                </table>
                             </div>
                         </div>
 
@@ -317,8 +371,8 @@
                         </div>
                     </div>
                 </t>
-                    
-                
+
+
                 <!-- Venta Ciggaros -->
                 <t t-if="receipt.is_to_venta_ciggaros">
                     <t t-if="receipt.company.logo">
@@ -330,7 +384,7 @@
                             <t t-esc="receipt.company.name" />
                         </h2>
                         <br/>
-                    </t>    
+                    </t>
                     <div class="pos-receipt-contact">
                         <t t-if="receipt.company.contact_address">
                             <div><t t-esc="receipt.company.contact_address" /></div>
@@ -478,11 +532,10 @@
                     </div>
                     </t>
 
-                    
+
                 </div>
             </div>
 
         </xpath>
     </t>
 </templates>
-

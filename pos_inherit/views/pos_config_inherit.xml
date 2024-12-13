@@ -19,5 +19,27 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="pos_config_view_form_fe_cl" model="ir.ui.view">
+        <field name="name">pos.config.view.form.fe.cl</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pos_accounting_section']" position="after">
+                <h2>POS Chile</h2>
+                <div class="row mt16 o_settings_container" id="boleta_seccion">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="address_change_id"/>
+                            <div class="text-muted">
+                                Seleccione contacto con dirección traspuesta
+                            </div>
+                            <field name="address_change_id" />
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
     </data>
 </odoo>
